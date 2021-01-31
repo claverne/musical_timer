@@ -1,7 +1,8 @@
 import Navbar from './Navbar';
 import React from 'react';
-import {Box, Button, Center, UnorderedList, ListItem} from "@chakra-ui/react";
+import {Box, Center, NumberInput, Text} from "@chakra-ui/react";
 import {init_token, getPlaylists, getUser} from './back.js'
+import {NumberInputFieldTimer} from './NumberInputFieldTimer.js'
 
 let Cookie = require('js-cookie');
 
@@ -18,14 +19,20 @@ export class Loggedin extends React.Component {
             <Box bgGradient="linear(to-bl, #7597c3, #a4699f, #180f17)" minH={"100vh"}>
                 <Navbar user={this.state.user ? this.state.user : null}/>
                 <Center height="70vh">
-                    <Button bg="#1DB954" textColor="white" onClick={()=>this.setPlaylistsState()}>
-                        Get list playlists
-                    </Button>
-                    {this.state.playlists &&
-                        <UnorderedList>
-                            {this.state.playlists.items.map((item)=><ListItem key={item.id}>{item.name}</ListItem>)}
-                        </UnorderedList>
-                    }
+                    <NumberInput defaultValue={0} min={0} max={5} focusBorderColor="#1DB954">
+                      <NumberInputFieldTimer/>
+                    </NumberInput>
+                    <NumberInput
+                        defaultValue={0} min={0} max={9} focusBorderColor="#1DB954">
+                      <NumberInputFieldTimer/>
+                    </NumberInput>
+                    <Text fontSize="6rem" color="White">:</Text>
+                    <NumberInput defaultValue={0} min={0} max={5} focusBorderColor="#1DB954">
+                      <NumberInputFieldTimer/>
+                    </NumberInput>
+                    <NumberInput defaultValue={0} min={0} max={9} focusBorderColor="#1DB954">
+                      <NumberInputFieldTimer/>
+                    </NumberInput>
 
                 </Center>
             </Box>
