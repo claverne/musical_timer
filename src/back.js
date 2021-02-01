@@ -1,5 +1,4 @@
 import {User} from './User.js'
-import React from 'react';
 
 let axios = require('axios');
 let querystring = require('querystring');

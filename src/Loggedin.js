@@ -1,6 +1,9 @@
 import Navbar from './Navbar';
 import React from 'react';
-import {Box, Center, NumberInput, Text} from "@chakra-ui/react";
+import {Box, Center, NumberInput, Text, VStack, HStack, Button} from "@chakra-ui/react";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faPlay } from '@fortawesome/free-solid-svg-icons'
+
 import {init_token, getPlaylists, getUser} from './back.js'
 import {NumberInputFieldTimer} from './NumberInputFieldTimer.js'
 
@@ -11,33 +14,59 @@ export class Loggedin extends React.Component {
         super(props);
         this.state = {
             user: null,
-            playlists: null
+            h10_value: 1,
+            h01_value: 0,
+            m10_value: 0,
+            m01_value: 0,
         };
     }
+
     render() {
         return (
             <Box bgGradient="linear(to-bl, #7597c3, #a4699f, #180f17)" minH={"100vh"}>
                 <Navbar user={this.state.user ? this.state.user : null}/>
                 <Center height="70vh">
-                    <NumberInput defaultValue={0} min={0} max={5} focusBorderColor="#1DB954">
-                      <NumberInputFieldTimer/>
-                    </NumberInput>
-                    <NumberInput
-                        defaultValue={0} min={0} max={9} focusBorderColor="#1DB954">
-                      <NumberInputFieldTimer/>
-                    </NumberInput>
-                    <Text fontSize="6rem" color="White">:</Text>
-                    <NumberInput defaultValue={0} min={0} max={5} focusBorderColor="#1DB954">
-                      <NumberInputFieldTimer/>
-                    </NumberInput>
-                    <NumberInput defaultValue={0} min={0} max={9} focusBorderColor="#1DB954">
-                      <NumberInputFieldTimer/>
-                    </NumberInput>
-
+                    <VStack spacing="3rem">
+                        <HStack>
+                            <NumberInput
+                                defaultValue={1} min={0} max={5} focusBorderColor="#1DB954"
+                                value={this.state.h10_value}
+                                onChange={(string, number)=>this.handleInputChange("h10_value", string, number)}
+                            >
+                              <NumberInputFieldTimer/>
+                            </NumberInput>
+                            <NumberInput
+                                defaultValue={0} min={0} max={9} focusBorderColor="#1DB954"
+                                value={this.state.h01_value}
+                                onChange={(string, number)=>this.handleInputChange("h01_value", string, number)}
+                            >
+                              <NumberInputFieldTimer/>
+                            </NumberInput>
+                            <Text fontSize="6rem" color="White">:</Text>
+                            <NumberInput
+                                defaultValue={0} min={0} max={5} focusBorderColor="#1DB954"
+                                value={this.state.m10_value}
+                                onChange={(string, number)=>this.handleInputChange("m10_value", string, number)}
+                            >
+                              <NumberInputFieldTimer/>
+                            </NumberInput>
+                            <NumberInput
+                                defaultValue={0} min={0} max={9} focusBorderColor="#1DB954"
+                                value={this.state.m01_value}
+                                onChange={(string, number)=>this.handleInputChange("m01_value", string, number)}
+                            >
+                              <NumberInputFieldTimer/>
+                            </NumberInput>
+                        </HStack>
+                        <Button  w="5rem" h="5rem" borderRadius="full" bg="#1DB954" color="white" >
+                            <FontAwesomeIcon icon={faPlay}/>
+                        </Button>
+                    </VStack>
                 </Center>
             </Box>
         );
     }
+
     componentDidMount() {
         let queryString = window.location.search;
         let urlParams = new URLSearchParams(queryString);
@@ -54,9 +83,12 @@ export class Loggedin extends React.Component {
         }));
     }
 
-    setPlaylistsState() {
-        getPlaylists().then(playlists => this.setState({
-            playlists,
-        }));
+    handleInputChange(name, string, number) {
+        const value = number;
+        const name_state = name;
+
+        this.setState({
+          [name_state]: value
+        });
     }
 }
