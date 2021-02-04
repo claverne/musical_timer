@@ -4,7 +4,7 @@ import {Box, Center, NumberInput, Text, VStack, HStack, Button} from "@chakra-ui
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlay } from '@fortawesome/free-solid-svg-icons'
 
-import {init_token, getPlaylists, getUser} from './back.js'
+import {init_token, getTimerPlaylist, getUser} from './back.js'
 import {NumberInputFieldTimer} from './NumberInputFieldTimer.js'
 
 let Cookie = require('js-cookie');
@@ -58,7 +58,10 @@ export class Loggedin extends React.Component {
                               <NumberInputFieldTimer/>
                             </NumberInput>
                         </HStack>
-                        <Button  w="5rem" h="5rem" borderRadius="full" bg="#1DB954" color="white" >
+                        <Button
+                            w="5rem" h="5rem" borderRadius="full" bg="#1DB954" color="white"
+                            onClick={()=>this.handleStartClick()}
+                        >
                             <FontAwesomeIcon icon={faPlay}/>
                         </Button>
                     </VStack>
@@ -90,5 +93,18 @@ export class Loggedin extends React.Component {
         this.setState({
           [name_state]: value
         });
+    }
+
+    handleStartClick() {
+        const h10 = this.state.h10_value;
+        const h01 = this.state.h01_value;
+        const m10 = this.state.m10_value;
+        const m01 = this.state.m01_value;
+
+        const max_dur = (h10*10 + h01) * 60 + (m10*10 + m01);
+
+        console.log(max_dur);
+        getTimerPlaylist(max_dur);
+
     }
 }
