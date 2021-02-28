@@ -72,8 +72,11 @@ export function getTimerPlaylist(max_dur) {
         });
         return featuredPlaylistIds;
     }).then(function(featuredPlaylistIds) {
-        let playlist_id = featuredPlaylistIds[0];
-        axios({
+        let tracksIdsDuration = [];
+        let tot_dur = 0;
+
+        featuredPlaylistIds.map(function(playlist_id) {
+            axios({
             method:'get',
             url:`https://api.spotify.com/v1/playlists/${playlist_id}/tracks`,
             headers: {
@@ -84,17 +87,31 @@ export function getTimerPlaylist(max_dur) {
                 fields: "items(track(id, duration_ms))",
                 timestamp: date,
             },
-        }).then(function(response) {
-            let tot_dur = 0;
-            let tracksIds = response.data.items.map(function (object) {
-                let track_dur = Math.round(object.track.duration_ms/1000);
-                if((tot_dur + track_dur) <= max_dur) {
-                    tot_dur = tot_dur + track_dur;
-                    return [object.track.id, track_dur];
-                }
-            });
+            }).then(function(response) {
 
-            console.log(tot_dur)
+                let a = response.data.items.map(function (object) {
+                    let track_dur = Math.round(object.track.duration_ms/1000);
+                    if((tot_dur + track_dur) <= max_dur - 240) {
+                        tot_dur = tot_dur + track_dur;
+                        return [object.track.id, track_dur];
+                    }
+                });
+
+                tracksIdsDuration.push(a);
+
+                let b = response.data.items.map(function (object) {
+                    let track_dur = Math.round(object.track.duration_ms/1000);
+                    if(track_dur === max_dur - tot_dur) {
+                        tot_dur = tot_dur + track_dur;
+                        return [object.track.id, track_dur];
+                    }
+                });
+
+                tracksIdsDuration.push(b);
+
+                console.log(tot_dur)
+            });
         });
+
     });
 }
