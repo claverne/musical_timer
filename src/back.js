@@ -51,11 +51,47 @@ export function login() {
     });
 }
 
-export function getTimerPlaylist(max_dur) {
+function createPlaylist(duration) {
+    return axios({
+        method:'post',
+        url:`https://api.spotify.com/v1/users/${user_id}/playlists`,
+        headers: {
+            'Authorization': 'Bearer ' + access_token,
+            'Content-Type': 'application/json',
+        },
+        data: {
+            name: "My " + duration.toString() + "s timer",
+        },
+    }).then(function(response){
+        return response.data.id;
+    });
+}
+
+function fillPlaylist(playlist_id, tracksURIsDuration) {
+    let listURIs = tracksURIsDuration.reduce((acc, cur) => cur + acc.toString() + ',', '');
+
+    //console.log(listURIs);
+
+    /*axios({
+        method:'post',
+        url:`https://api.spotify.com/v1/playlists/${playlist_id}/tracks`,
+        headers: {
+            'Authorization': 'Bearer ' + access_token,
+            'Content-Type': 'application/json',
+        },
+        data: {
+            uris: ,
+        },
+    }).then(function(response){
+        return response;
+    });*/
+}
+
+function getFeaturedPlaylistsIds() {
     let date = new Date();
     date = date.toISOString();
 
-    axios({
+    return axios({
         method:'get',
         url:`https://api.spotify.com/v1/browse/featured-playlists`,
         headers: {
@@ -70,48 +106,69 @@ export function getTimerPlaylist(max_dur) {
         let featuredPlaylistIds = response.data.playlists.items.map(function (playlist) {
           return playlist.id
         });
+
         return featuredPlaylistIds;
-    }).then(function(featuredPlaylistIds) {
-        let tracksIdsDuration = [];
-        let tot_dur = 0;
-
-        featuredPlaylistIds.map(function(playlist_id) {
-            axios({
-            method:'get',
-            url:`https://api.spotify.com/v1/playlists/${playlist_id}/tracks`,
-            headers: {
-                'Authorization': 'Bearer ' + access_token
-            },
-            params: {
-                market: user_country,
-                fields: "items(track(id, duration_ms))",
-                timestamp: date,
-            },
-            }).then(function(response) {
-
-                let a = response.data.items.map(function (object) {
-                    let track_dur = Math.round(object.track.duration_ms/1000);
-                    if((tot_dur + track_dur) <= max_dur - 240) {
-                        tot_dur = tot_dur + track_dur;
-                        return [object.track.id, track_dur];
-                    }
-                });
-
-                tracksIdsDuration.push(a);
-
-                let b = response.data.items.map(function (object) {
-                    let track_dur = Math.round(object.track.duration_ms/1000);
-                    if(track_dur === max_dur - tot_dur) {
-                        tot_dur = tot_dur + track_dur;
-                        return [object.track.id, track_dur];
-                    }
-                });
-
-                tracksIdsDuration.push(b);
-
-                console.log(tot_dur)
-            });
-        });
-
     });
+}
+
+function getTracksInfo(playlist_id) {
+    let date = new Date();
+    date = date.toISOString();
+
+    return axios({
+        method:'get',
+        url:`https://api.spotify.com/v1/playlists/${playlist_id}/tracks`,
+        headers: {
+            'Authorization': 'Bearer ' + access_token
+        },
+        params: {
+            market: user_country,
+            fields: "items(track(uri, duration_ms))",
+            timestamp: date,
+        },
+    }).then(function(response) {
+        const tracks = response.data.items;
+         return tracks.map(function(trackObj) {
+             return {uri: trackObj.track.uri, duration_s: Math.round(trackObj.track.duration_ms/1000)};
+         });
+    });
+}
+
+function filterTracks(allTracksInfo, max_dur) {
+    let tot_dur = 0;
+    let playlist_tracks = [];
+    allTracksInfo.forEach((trackInfo) => {
+        if(trackInfo.duration_s <= max_dur - tot_dur - 150) {
+            tot_dur = tot_dur + trackInfo.duration_s;
+            playlist_tracks = playlist_tracks.concat(trackInfo);
+        }
+    });
+
+    allTracksInfo = allTracksInfo.filter(item => !playlist_tracks.includes(item));
+
+    allTracksInfo.forEach((trackInfo) => {
+        if(trackInfo.duration_s === max_dur - tot_dur) {
+            tot_dur = tot_dur + trackInfo.duration_s;
+            playlist_tracks = playlist_tracks.concat(trackInfo);
+        }
+    });
+
+    console.log(playlist_tracks);
+    return playlist_tracks;
+}
+
+export async function getTimerPlaylist(max_dur) {
+    //const myPlaylist_id = await createPlaylist(max_dur);
+    //console.log(myPlaylist_id);
+    const featuredPlaylists_ids = await getFeaturedPlaylistsIds();
+    //console.log(featuredPlaylists_ids);
+
+    const PR_allTracksInfo = featuredPlaylists_ids.map((idPlaylist) => getTracksInfo(idPlaylist));
+    let allTracksInfo = await Promise.all(PR_allTracksInfo);
+    allTracksInfo = allTracksInfo.flat();
+    //console.log(allTracksInfo);
+
+    const playlist_tracks = filterTracks(allTracksInfo, max_dur);
+
+    //fillPlaylist(myPlaylist_id, tracksURIsDuration);
 }

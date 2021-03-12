@@ -87,11 +87,8 @@ export class Loggedin extends React.Component {
     }
 
     handleInputChange(name, string, number) {
-        const value = number;
-        const name_state = name;
-
         this.setState({
-          [name_state]: value
+          [name]: number
         });
     }
 
