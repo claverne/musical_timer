@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {init_token, getTimerPlaylist, getUser} from './back.js'
 import Navbar from './Navbar';
 import {TimerInput} from "./TimerInput";
+import {Layout} from "./Layout";
 
 let Cookie = require('js-cookie');
 
@@ -14,26 +15,45 @@ export class Loggedin extends React.Component {
         this.state = {
             user: null,
             max_dur: 600,
+            isLoading: false,
+            playlistGenerated: false,
         };
     }
 
     render() {
-        return (
-            <Box bgGradient="linear(to-bl, #7597c3, #a4699f, #180f17)" minH={"100vh"}>
-                <Navbar user={this.state.user ? this.state.user : null}/>
-                <Center height="70vh">
+        if(this.state.playlistGenerated){
+            return(
+                <Layout
+                    user={this.state.user}
+                >
+                    <Button
+                        bg="#1DB954"
+                        color="white"
+                        onClick={() => this.setState({playlistGenerated:false})}
+                    >
+                        Create a new timer playlist !
+                    </Button>
+                </Layout>
+            );
+        } else {
+            return (
+                <Layout
+                    user={this.state.user}
+                >
                     <VStack spacing="3rem">
-                        <TimerInput onChange={(max_dur)=> this.setState({max_dur})} max_dur={this.state.max_dur}/>
+                        <TimerInput onChange={(max_dur) => this.setState({max_dur})} max_dur={this.state.max_dur}/>
                         <Button
-                            bg="#1DB954" color="white"
-                            onClick={()=>this.handleStartClick()}
+                            isLoading={this.state.isLoading}
+                            bg="#1DB954"
+                            color="white"
+                            onClick={() => this.handleStartClick()}
                         >
                             Create my timer playlist !
                         </Button>
                     </VStack>
-                </Center>
-            </Box>
-        );
+                </Layout>
+            );
+        }
     }
 
     componentDidMount() {
@@ -54,9 +74,13 @@ export class Loggedin extends React.Component {
 
 
 
-    handleStartClick() {
+    async handleStartClick() {
         console.log(this.state.max_dur);
-        getTimerPlaylist(this.state.max_dur);
-
+        this.setState({isLoading:true})
+        await getTimerPlaylist(this.state.max_dur);
+        this.setState({
+            isLoading:false,
+            playlistGenerated:true,
+        });
     }
 }
