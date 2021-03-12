@@ -26,7 +26,7 @@ export default class Navbar extends React.Component {
                                 boxSize="3em"
                                 ml="1em"
                                 borderRadius="full"
-                                src={this.props.user.image[0].url}
+                                src={this.props.user.image[0]?.url}
                                 alt="profile picture"/>
                         </Center>
                     }

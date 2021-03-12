@@ -1,8 +1,10 @@
 import {User} from './User.js'
+import {shuffle} from './util.js'
 
 let axios = require('axios');
 let querystring = require('querystring');
 let Cookie = require('js-cookie');
+const imageToBase64 = require('image-to-base64');
 
 let access_token = null;
 let refresh_token = null
@@ -51,7 +53,7 @@ export function login() {
 }
 
 async function getMyPlaylistId() {
-    const playlist_name = "My timer";
+    const playlist_name = "⏱ My amazing timer !! ⏱️";
 
     const myPlaylists = await axios({
         method:'get',
@@ -84,6 +86,29 @@ async function getMyPlaylistId() {
         data: {
             name: playlist_name,
         },
+    });
+
+    let imgBase64 = await fetch("http://localhost:3000/img.jpeg") // Image URL
+    .then(a => a.blob())
+    .then(blob => new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onerror = reject;
+        reader.onload = () => {
+            resolve(reader.result);
+        };
+        reader.readAsDataURL(blob);
+    }));
+
+    imgBase64 = imgBase64.replace("data:image/jpeg;base64,", "");
+
+    await axios({
+        method:'put',
+        url:`https://api.spotify.com/v1/playlists/${myNewPlaylist.data.id}/images`,
+        headers: {
+            'Authorization': 'Bearer ' + access_token,
+            'Content-Type': 'image/jpeg',
+        },
+        data: imgBase64,
     });
 
     return myNewPlaylist.data.id
@@ -142,7 +167,7 @@ function getTracksInfo(playlist_id) {
         },
     }).then(function(response) {
         const tracks = response.data.items;
-         return tracks.map(function(trackObj) {
+         return tracks.filter(trackObj => trackObj.track).map(function(trackObj) {
              return {uri: trackObj.track.uri, duration_s: Math.round(trackObj.track.duration_ms/1000)};
          });
     });
@@ -151,8 +176,11 @@ function getTracksInfo(playlist_id) {
 function filterTracks(allTracksInfo, max_dur) {
     let tot_dur = 0;
     let playlist_tracks = [];
+
+    allTracksInfo = shuffle(allTracksInfo);
+
     allTracksInfo.forEach((trackInfo) => {
-        if(trackInfo.duration_s <= max_dur - tot_dur - 150) {
+        if(trackInfo.duration_s <= max_dur - tot_dur - 150 - 3) {
             tot_dur = tot_dur + trackInfo.duration_s;
             playlist_tracks = playlist_tracks.concat(trackInfo);
         }
@@ -161,11 +189,13 @@ function filterTracks(allTracksInfo, max_dur) {
     allTracksInfo = allTracksInfo.filter(item => !playlist_tracks.includes(item));
 
     allTracksInfo.forEach((trackInfo) => {
-        if(trackInfo.duration_s === max_dur - tot_dur) {
+        if(trackInfo.duration_s === max_dur - tot_dur - 3) {
             tot_dur = tot_dur + trackInfo.duration_s;
             playlist_tracks = playlist_tracks.concat(trackInfo);
         }
     });
+
+    playlist_tracks = playlist_tracks.concat({uri:"spotify:track:4J1UCLk38GysU2ZGpgQwCw", duration_s:3});
 
     console.log(tot_dur);
 

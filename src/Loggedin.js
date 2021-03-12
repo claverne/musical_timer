@@ -59,10 +59,10 @@ export class Loggedin extends React.Component {
                             </NumberInput>
                         </HStack>
                         <Button
-                            w="5rem" h="5rem" borderRadius="full" bg="#1DB954" color="white"
+                            bg="#1DB954" color="white"
                             onClick={()=>this.handleStartClick()}
                         >
-                            <FontAwesomeIcon icon={faPlay}/>
+                            Create my timer playlist !
                         </Button>
                     </VStack>
                 </Center>

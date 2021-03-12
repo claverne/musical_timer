@@ -34,7 +34,7 @@ app.get('/login', function(req, res) {
   let state = generateRandomString(16);
 
   // your application requests authorization
-  let scope = 'user-read-private user-read-email playlist-read-private playlist-modify-public';
+  let scope = 'user-read-private user-read-email playlist-read-private playlist-modify-public ugc-image-upload';
   res.json({
     urlbase: 'https://accounts.spotify.com/authorize?',
     response_type: 'code',
