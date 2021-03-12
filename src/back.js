@@ -67,24 +67,18 @@ function createPlaylist(duration) {
     });
 }
 
-function fillPlaylist(playlist_id, tracksURIsDuration) {
-    let listURIs = tracksURIsDuration.reduce((acc, cur) => cur + acc.toString() + ',', '');
-
+function fillPlaylist(playlist_id, playlist_tracks) {
+    const listURIs = playlist_tracks.reduce((acc, cur) => acc + cur.uri.toString() + ',', '').slice(0, -1);
     //console.log(listURIs);
 
-    /*axios({
+    axios({
         method:'post',
-        url:`https://api.spotify.com/v1/playlists/${playlist_id}/tracks`,
+        url:`https://api.spotify.com/v1/playlists/${playlist_id}/tracks?uris=${listURIs}`,
         headers: {
             'Authorization': 'Bearer ' + access_token,
             'Content-Type': 'application/json',
         },
-        data: {
-            uris: ,
-        },
-    }).then(function(response){
-        return response;
-    });*/
+    });
 }
 
 function getFeaturedPlaylistsIds() {
@@ -153,12 +147,13 @@ function filterTracks(allTracksInfo, max_dur) {
         }
     });
 
-    console.log(playlist_tracks);
+    console.log(tot_dur);
+
     return playlist_tracks;
 }
 
 export async function getTimerPlaylist(max_dur) {
-    //const myPlaylist_id = await createPlaylist(max_dur);
+    const myPlaylist_id = await createPlaylist(max_dur);
     //console.log(myPlaylist_id);
     const featuredPlaylists_ids = await getFeaturedPlaylistsIds();
     //console.log(featuredPlaylists_ids);
@@ -170,5 +165,5 @@ export async function getTimerPlaylist(max_dur) {
 
     const playlist_tracks = filterTracks(allTracksInfo, max_dur);
 
-    //fillPlaylist(myPlaylist_id, tracksURIsDuration);
+    fillPlaylist(myPlaylist_id, playlist_tracks);
 }
