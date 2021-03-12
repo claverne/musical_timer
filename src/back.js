@@ -24,8 +24,7 @@ export function getUser() {
     }).then(function(response) {
         user_id = response.data.id;
         user_country = response.data.country;
-        let user = new User(response.data.id, response.data.display_name, response.data.images);
-        return user
+        return new User(response.data.id, response.data.display_name, response.data.images);
     });
 }
 
@@ -51,8 +50,31 @@ export function login() {
     });
 }
 
-function createPlaylist(duration) {
-    return axios({
+async function getMyPlaylistId() {
+    const playlist_name = "My timer";
+
+    const myPlaylists = await axios({
+        method:'get',
+        url:`https://api.spotify.com/v1/users/${user_id}/playlists`,
+        headers: {
+            'Authorization': 'Bearer ' + access_token,
+            'Content-Type': 'application/json',
+        },
+    });
+
+    const myPlaylist = myPlaylists.data.items.find(playlist => playlist.name === playlist_name);
+    if (myPlaylist) {
+        await axios({
+            method:'delete',
+            url:`https://api.spotify.com/v1/playlists/${myPlaylist.id}/followers`,
+            headers: {
+                'Authorization': 'Bearer ' + access_token,
+                'Content-Type': 'application/json',
+            },
+        });
+    }
+
+    const myNewPlaylist = await axios({
         method:'post',
         url:`https://api.spotify.com/v1/users/${user_id}/playlists`,
         headers: {
@@ -60,11 +82,11 @@ function createPlaylist(duration) {
             'Content-Type': 'application/json',
         },
         data: {
-            name: "My " + duration.toString() + "s timer",
+            name: playlist_name,
         },
-    }).then(function(response){
-        return response.data.id;
     });
+
+    return myNewPlaylist.data.id
 }
 
 function fillPlaylist(playlist_id, playlist_tracks) {
@@ -97,11 +119,9 @@ function getFeaturedPlaylistsIds() {
             timestamp: date,
         },
     }).then(function(response){
-        let featuredPlaylistIds = response.data.playlists.items.map(function (playlist) {
+        return response.data.playlists.items.map(function (playlist) {
           return playlist.id
         });
-
-        return featuredPlaylistIds;
     });
 }
 
@@ -153,7 +173,7 @@ function filterTracks(allTracksInfo, max_dur) {
 }
 
 export async function getTimerPlaylist(max_dur) {
-    const myPlaylist_id = await createPlaylist(max_dur);
+    const myPlaylist_id = await getMyPlaylistId();
     //console.log(myPlaylist_id);
     const featuredPlaylists_ids = await getFeaturedPlaylistsIds();
     //console.log(featuredPlaylists_ids);
