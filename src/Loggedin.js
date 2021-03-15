@@ -6,6 +6,7 @@ import {init_token, getTimerPlaylist, getUser} from './back.js'
 import Navbar from './Navbar';
 import {TimerInput} from "./TimerInput";
 import {Layout} from "./Layout";
+import {ListStyles} from "./ListStyle";
 
 let Cookie = require('js-cookie');
 
@@ -40,7 +41,8 @@ export class Loggedin extends React.Component {
                 <Layout
                     user={this.state.user}
                 >
-                    <VStack spacing="3rem">
+                    <ListStyles/>
+                    <VStack spacing="3rem" width="75%">
                         <TimerInput onChange={(max_dur) => this.setState({max_dur})} max_dur={this.state.max_dur}/>
                         <Button
                             isLoading={this.state.isLoading}
@@ -51,6 +53,7 @@ export class Loggedin extends React.Component {
                             Create my timer playlist !
                         </Button>
                     </VStack>
+
                 </Layout>
             );
         }

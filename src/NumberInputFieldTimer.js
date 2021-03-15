@@ -10,7 +10,7 @@ export class NumberInputFieldTimer extends React.Component {
                 m="1rem"
                 textAlign="center"
                 fontWeight="bold"
-                fontSize="6rem"
+                fontSize="6em"
                 bg="rgba(255,255,255,0.3)"
             />
         );
