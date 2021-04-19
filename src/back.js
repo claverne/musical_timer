@@ -180,7 +180,7 @@ function filterTracks(allTracksInfo, max_dur) {
     allTracksInfo = shuffle(allTracksInfo);
 
     allTracksInfo.forEach((trackInfo) => {
-        if(trackInfo.duration_s <= max_dur - tot_dur - 150 - 3) {
+        if(trackInfo.duration_s <= max_dur - tot_dur - 150 - 6) {
             tot_dur = tot_dur + trackInfo.duration_s;
             playlist_tracks = playlist_tracks.concat(trackInfo);
         }
@@ -189,12 +189,13 @@ function filterTracks(allTracksInfo, max_dur) {
     allTracksInfo = allTracksInfo.filter(item => !playlist_tracks.includes(item));
 
     allTracksInfo.forEach((trackInfo) => {
-        if(trackInfo.duration_s === max_dur - tot_dur - 3) {
+        if(trackInfo.duration_s === max_dur - tot_dur - 6) {
             tot_dur = tot_dur + trackInfo.duration_s;
             playlist_tracks = playlist_tracks.concat(trackInfo);
         }
     });
 
+    playlist_tracks = playlist_tracks.concat({uri:"spotify:track:4J1UCLk38GysU2ZGpgQwCw", duration_s:3});
     playlist_tracks = playlist_tracks.concat({uri:"spotify:track:4J1UCLk38GysU2ZGpgQwCw", duration_s:3});
 
     console.log(tot_dur);

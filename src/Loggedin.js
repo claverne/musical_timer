@@ -6,7 +6,7 @@ import {init_token, getTimerPlaylist, getUser} from './back.js'
 import Navbar from './Navbar';
 import {TimerInput} from "./TimerInput";
 import {Layout} from "./Layout";
-import {ListStyles} from "./ListStyle";
+import {ListStyles} from "./ListStyles";
 
 let Cookie = require('js-cookie');
 
@@ -18,6 +18,7 @@ export class Loggedin extends React.Component {
             max_dur: 600,
             isLoading: false,
             playlistGenerated: false,
+            styleMusic: "From featured playlists",
         };
     }
 
@@ -28,8 +29,9 @@ export class Loggedin extends React.Component {
                     user={this.state.user}
                 >
                     <Button
-                        bg="#1DB954"
+                        bg="#63A088"
                         color="white"
+                        shadow="inset -3px -3px 6px rgba(0,0,0,0.3), inset 2px 2px 6px rgba(255,255,255,0.3)"
                         onClick={() => this.setState({playlistGenerated:false})}
                     >
                         Create a new timer playlist !
@@ -41,13 +43,14 @@ export class Loggedin extends React.Component {
                 <Layout
                     user={this.state.user}
                 >
-                    <ListStyles/>
+                    <ListStyles onChange={(styleMusic) => this.setState({styleMusic})} styleMusic={this.state.styleMusic}/>
                     <VStack spacing="3rem" width="75%">
                         <TimerInput onChange={(max_dur) => this.setState({max_dur})} max_dur={this.state.max_dur}/>
                         <Button
                             isLoading={this.state.isLoading}
-                            bg="#1DB954"
+                            bg="#63A088"
                             color="white"
+                            shadow="inset -3px -3px 6px rgba(0,0,0,0.3), inset 2px 2px 6px rgba(255,255,255,0.3)"
                             onClick={() => this.handleStartClick()}
                         >
                             Create my timer playlist !

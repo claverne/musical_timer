@@ -6,7 +6,7 @@ import {TimerInput} from "./TimerInput";
 export class Layout extends React.Component {
     render() {
         return(
-            <Box bgGradient="linear(to-bl, #7597c3, #a4699f, #180f17)" minH={"100vh"} align="center">
+            <Box bgGradient="linear(to-bl, #404E7C, #260F26)" minH={"100vh"} align="center">
                 <Box height="100vh" width="80vw" pos="relative"
                      bgGradient="linear(rgba(24,15,3,0.65),rgba(24,15,3,0.1), rgba(24,15,3,0))"
                 >
@@ -19,3 +19,5 @@ export class Layout extends React.Component {
         );
     }
 }
+
+//https://coolors.co/86cb92-71b48d-404e7c-251f47-260f26

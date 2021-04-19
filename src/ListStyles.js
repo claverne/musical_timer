@@ -3,7 +3,7 @@ import {Text, Center, VStack, Box, useRadioGroup} from "@chakra-ui/react";
 
 import {RadioCard} from './RadioCard';
 
-export function ListStyles() {
+export function ListStyles(props) {
     const options = ["From featured playlists", "From your playlists", "K-pop", "Rock", "Pop"];
 
     const { getRootProps, getRadioProps } = useRadioGroup({
@@ -18,19 +18,24 @@ export function ListStyles() {
         <Box width="25%" height="100%" pt="5rem"
              bgGradient="linear(to-l,rgba(24,15,3,0.3),rgba(24,15,3,0.6))"
         >
-            <VStack  width="90%">
+            <VStack  width="80%">
                 <Text
-                    p="1em" width="100%"
+                    pb="1rem" pt="2rem" pl="1rem" width="100%"
                     color="White"
-                    borderBottomWidth="1px"
                     fontWeight="bold"
+                    fontSize="1.5em"
+                    textAlign="left"
+                    textShadow="3px 3px 3px rgba(0,0,0,1)"
                 >
-                    Choose your style of music
+                    Style of music
                 </Text>
 
                 <VStack {...group} width="100%">
                     {options.map((value) => {
-                        const radio = getRadioProps({ value })
+                        let radio = getRadioProps({ value });
+                        radio.onChange=(eventOrValue)=>props.onChange(eventOrValue.target.value);;
+                        if(value===props.styleMusic)
+                            radio.isChecked=true;
                         return (
                         <RadioCard key={value} {...radio}>
                             {value}

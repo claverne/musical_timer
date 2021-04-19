@@ -12,14 +12,11 @@ export function RadioCard(props) {
         <Box
             {...checkbox}
             cursor="pointer"
-            width="100%" pb="1rem" pt="0.5rem"
-            borderBottomWidth="1px"
-            borderColor="rgba(255,255,255,0.5)"
-            color="white"
-            bgGradient="linear(to-t,rgba(29,185,84,0),rgba(29,185,84,0))"
+            width="100%" pb="1rem" pt="1rem" pl="1rem"
+            color="rgba(255,255,255,0.5)"
+            textAlign="left"
             transition="0.05s linear all"
             _checked={{
-                bgGradient: "linear(to-t,rgba(29,185,84,0.3),rgba(29,185,84,0.1), rgba(24,15,3,0))",
                 color: "White",
                 fontWeight: "bold",
                 borderColor: "#1DB954"
@@ -29,11 +26,11 @@ export function RadioCard(props) {
             }}
             _hover={{
                 fontWeight: "bold",
+                bg: "rgba(255,255,255,0.1)"
             }}
             _active={{
                 color: "rgba(255,255,255,0.5)",
                 fontWeight: "bold",
-                bgGradient:"linear(to-t,rgba(29,185,84,0),rgba(29,185,84,0))",
             }}
             >
             {props.children}
