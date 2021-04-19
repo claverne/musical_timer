@@ -150,6 +150,37 @@ function getFeaturedPlaylistsIds() {
     });
 }
 
+function getUserPlaylistsIds() {
+    return axios({
+        method:'get',
+        url:`https://api.spotify.com/v1/me/playlists`,
+        headers: {
+            'Authorization': 'Bearer ' + access_token
+        },
+    }).then(function(response){
+        return response.data.items.map(function (playlist) {
+          return playlist.id
+        });
+    });
+}
+
+function getCategoryPlaylistsIds(category_id) {
+    return axios({
+        method:'get',
+        url:`https://api.spotify.com/v1/browse/categories/${category_id}/playlists`,
+        headers: {
+            'Authorization': 'Bearer ' + access_token
+        },
+        params: {
+            country: user_country,
+        },
+    }).then(function(response){
+        return response.data.playlists.items.map(function (playlist) {
+          return playlist.id
+        });
+    });
+}
+
 function getTracksInfo(playlist_id) {
     let date = new Date();
     date = date.toISOString();
@@ -203,13 +234,34 @@ function filterTracks(allTracksInfo, max_dur) {
     return playlist_tracks;
 }
 
-export async function getTimerPlaylist(max_dur) {
+export async function getTimerPlaylist(max_dur, styleMusic) {
     const myPlaylist_id = await getMyPlaylistId();
+    let Playlists_ids;
     //console.log(myPlaylist_id);
-    const featuredPlaylists_ids = await getFeaturedPlaylistsIds();
+
+    switch(styleMusic) {
+        case "From featured playlists":
+            Playlists_ids = await getFeaturedPlaylistsIds();
+            break;
+        case "From your playlists":
+            Playlists_ids = await getUserPlaylistsIds();
+            break;
+        case "Pop":
+            Playlists_ids = await getCategoryPlaylistsIds('pop');
+            break;
+        case "K-pop":
+            Playlists_ids = await getCategoryPlaylistsIds('kpop');
+            break;
+        case "Rock":
+            Playlists_ids = await getCategoryPlaylistsIds('rock');
+            break;
+        default:
+            Playlists_ids = await getFeaturedPlaylistsIds();
+    }
+
     //console.log(featuredPlaylists_ids);
 
-    const PR_allTracksInfo = featuredPlaylists_ids.map((idPlaylist) => getTracksInfo(idPlaylist));
+    const PR_allTracksInfo = Playlists_ids.map((idPlaylist) => getTracksInfo(idPlaylist));
     let allTracksInfo = await Promise.all(PR_allTracksInfo);
     allTracksInfo = allTracksInfo.flat();
     //console.log(allTracksInfo);

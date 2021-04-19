@@ -33,7 +33,7 @@ export function ListStyles(props) {
                 <VStack {...group} width="100%">
                     {options.map((value) => {
                         let radio = getRadioProps({ value });
-                        radio.onChange=(eventOrValue)=>props.onChange(eventOrValue.target.value);;
+                        radio.onChange=(eventOrValue)=>props.onChange(eventOrValue.target.value);
                         if(value===props.styleMusic)
                             radio.isChecked=true;
                         return (

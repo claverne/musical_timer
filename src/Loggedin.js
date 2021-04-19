@@ -83,7 +83,7 @@ export class Loggedin extends React.Component {
     async handleStartClick() {
         console.log(this.state.max_dur);
         this.setState({isLoading:true})
-        await getTimerPlaylist(this.state.max_dur);
+        await getTimerPlaylist(this.state.max_dur, this.state.styleMusic);
         this.setState({
             isLoading:false,
             playlistGenerated:true,
