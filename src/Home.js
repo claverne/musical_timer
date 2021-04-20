@@ -11,6 +11,10 @@ export function Home() {
                 shadow="inset -3px -3px 6px rgba(0,0,0,0.3), inset 2px 2px 6px rgba(255,255,255,0.3)"
                 textColor="white"
                 onClick={()=>login()}
+
+                _hover={{
+                    bg: "#71a892"
+                }}
             >
                 Click to start
             </Button>

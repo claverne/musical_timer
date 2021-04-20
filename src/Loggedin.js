@@ -17,7 +17,7 @@ export class Loggedin extends React.Component {
             user: null,
             max_dur: 600,
             isLoading: false,
-            playlistGenerated: true,
+            playlistGenerated: false,
             styleMusic: "From featured playlists",
         };
     }
@@ -52,6 +52,10 @@ export class Loggedin extends React.Component {
                             color="white"
                             shadow="inset -3px -3px 6px rgba(0,0,0,0.3), inset 2px 2px 6px rgba(255,255,255,0.3)"
                             onClick={() => this.setState({playlistGenerated:false})}
+
+                            _hover={{
+                                bg: "#71a892"
+                            }}
                         >
                             New timer
                         </Button>
@@ -68,7 +72,7 @@ export class Loggedin extends React.Component {
                         <Box>
                             <Text
                                 pt="2rem" width="100%"
-                                color="#a0c5b6"
+                                color="#b0cfc2"
                                 fontWeight="bold"
                                 fontSize="1.5em"
                                 textShadow="3px 3px 3px rgba(0,0,0,1)"
@@ -87,6 +91,10 @@ export class Loggedin extends React.Component {
                             color="white"
                             shadow="inset -3px -3px 6px rgba(0,0,0,0.3), inset 2px 2px 6px rgba(255,255,255,0.3)"
                             onClick={() => this.handleStartClick()}
+
+                            _hover={{
+                                bg: "#71a892"
+                            }}
                         >
                             Create my timer playlist !
                         </Button>

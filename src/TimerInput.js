@@ -15,14 +15,14 @@ export class TimerInput extends React.Component {
         return (
             <HStack>
                 <NumberInput
-                    defaultValue={1} min={0} max={5} focusBorderColor="#1DB954"
+                    defaultValue={1} focusBorderColor="#1DB954"
                     value={m10}
                     onChange={(string, number)=>this.handleInputChange(number, m01, s10, s01)}
                 >
                   <NumberInputFieldTimer/>
                 </NumberInput>
                 <NumberInput
-                    defaultValue={0} min={0} max={9} focusBorderColor="#1DB954"
+                    defaultValue={0} focusBorderColor="#1DB954"
                     value={m01}
                     onChange={(string, number)=>this.handleInputChange(m10, number, s10, s01)}
                 >
@@ -30,14 +30,14 @@ export class TimerInput extends React.Component {
                 </NumberInput>
                 <Text fontSize="6rem" color="White">:</Text>
                 <NumberInput
-                    defaultValue={0} min={0} max={5} focusBorderColor="#1DB954"
+                    defaultValue={0} focusBorderColor="#1DB954"
                     value={s10}
                     onChange={(string, number)=>this.handleInputChange(m10, m01, number, s01)}
                 >
                   <NumberInputFieldTimer/>
                 </NumberInput>
                 <NumberInput
-                    defaultValue={0} min={0} max={9} focusBorderColor="#1DB954"
+                    defaultValue={0} focusBorderColor="#1DB954"
                     value={s01}
                     onChange={(string, number)=>this.handleInputChange(m10, m01, s10, number)}
                 >
@@ -48,6 +48,17 @@ export class TimerInput extends React.Component {
     }
 
     handleInputChange(m10, m01, s10, s01) {
-        this.props.onChange((m10*10 + m01) * 60 + (s10*10 + s01));
+        if(!m10)
+            m10=0;
+        if(!m01)
+            m01=0;
+        if(!s10)
+            s10=0
+        if(!s01)
+            s01=0
+
+        let durSec = (m10*10 + m01) * 60 + (s10*10 + s01);
+        durSec = Math.min(Math.max(durSec, 300), 3599);
+        this.props.onChange(durSec);
     }
 }

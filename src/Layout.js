@@ -19,4 +19,4 @@ export class Layout extends React.Component {
     }
 }
 
-//https://coolors.co/86cb92-71b48d-404e7c-251f47-260f26
+//https://coolors.co/fcb0b3-63a088-404e7c-ffdf64-260f26
