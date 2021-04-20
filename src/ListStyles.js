@@ -15,13 +15,13 @@ export function ListStyles(props) {
     const group = getRootProps();
 
     return (
-        <Box width="25%" height="100%" pt="5rem"
-             bgGradient="linear(to-l,rgba(24,15,3,0.3),rgba(24,15,3,0.6))"
+        <Box width="20%" height="100%" pt="5rem"
+             bgGradient="linear(to-l,rgba(22, 20, 31,0.2),rgba(22, 20, 31,0.4))"
         >
             <VStack  width="80%">
                 <Text
-                    pb="1rem" pt="2rem" pl="1rem" width="100%"
-                    color="White"
+                    pt="2rem" pl="1rem" width="100%"
+                    color="#FCB0B3"
                     fontWeight="bold"
                     fontSize="1.5em"
                     textAlign="left"
@@ -29,7 +29,6 @@ export function ListStyles(props) {
                 >
                     Style of music
                 </Text>
-
                 <VStack {...group} width="100%">
                     {options.map((value) => {
                         let radio = getRadioProps({ value });

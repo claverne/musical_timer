@@ -7,8 +7,7 @@ export class Layout extends React.Component {
     render() {
         return(
             <Box bgGradient="linear(to-bl, #404E7C, #260F26)" minH={"100vh"} align="center">
-                <Box height="100vh" width="80vw" pos="relative"
-                     bgGradient="linear(rgba(24,15,3,0.65),rgba(24,15,3,0.1), rgba(24,15,3,0))"
+                <Box height="100vh" width="100vw" pos="relative"
                 >
                     <Navbar user={this.props.user ? this.props.user : null}/>
                     <Center height="100%">

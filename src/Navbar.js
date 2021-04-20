@@ -5,7 +5,11 @@ export default class Navbar extends React.Component {
   render() {
     return (
         <Box pos="absolute" width="100%">
-            <Flex height="5em"  bgGradient="linear(#383339,#1f160d)" alignItems="center">
+            <Flex
+                height="5em"
+                bgGradient="linear(#2c293d,#16141f)"
+                alignItems="center"
+            >
                 <Center>
                      <Image
                          boxSize="3.5rem"
@@ -14,7 +18,7 @@ export default class Navbar extends React.Component {
                          src="sp_timer.png"
                          alt="logo"
                       />
-                     <Heading color="white">
+                     <Heading color="white" fontSize="2em">
                          Musical timer
                      </Heading>
                  </Center>

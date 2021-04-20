@@ -17,7 +17,7 @@ export function RadioCard(props) {
             textAlign="left"
             transition="0.05s linear all"
             _checked={{
-                color: "White",
+                color: "#fdcecf",
                 fontWeight: "bold",
                 borderColor: "#1DB954"
             }}
